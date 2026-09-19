@@ -522,13 +522,13 @@ body.cursor-down .cursor-ring{transform-origin:center;filter:brightness(.8)}
 /* ==================================================================
    18. Location + Instagram
    ================================================================== */
-.location{padding:120px 0;background:var(--espresso);color:var(--cream)}
+.location{padding:120px 0;background:var(--espresso);color:var(--cream);overflow:hidden}
 .location-grid{display:grid;grid-template-columns:1fr 2.1fr 1fr;align-items:center}
 .location-title{font-size:clamp(62px,9vw,140px);letter-spacing:-.04em}
 .location strong{font-family:var(--serif);font-weight:400;font-size:28px}
 .location p:not(.kicker){font-size:12px;margin:10px 0 24px;opacity:.75}
 
-.instagram{background:var(--cream)}
+.instagram{background:var(--cream);overflow:hidden}
 .insta-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:45px}
 .insta-title{font-size:clamp(44px,7vw,92px)}
 .insta-strip{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:12px;padding:0 12px}
@@ -681,7 +681,7 @@ footer{background:var(--ink);color:var(--cream);padding:80px 0 30px}
   .about-grid{gap:65px}
   .about-image{height:560px}
   .location-grid{gap:25px}
-  .location-title{font-size:18vw}
+  .location-title{font-size:min(14vw,105px)}
   .insta-strip{grid-template-columns:1fr 1fr;overflow:hidden}
   .insta-strip a{height:430px}
   .insta-strip a:nth-child(2){height:470px;margin-top:0}
@@ -718,9 +718,9 @@ footer{background:var(--ink);color:var(--cream);padding:80px 0 30px}
   .hero-actions{gap:15px}
   .hero-actions .text-link{display:none}
   h2{font-size:46px}
-  .location-title{font-size:18vw}
+  .location-title{font-size:min(14vw,105px)}
   .cta-title{font-size:17vw}
-  .insta-title{font-size:13vw}
+  .insta-title{font-size:min(11.5vw,70px)}
   .service-row{grid-template-columns:30px 1fr}
   .service-copy,.service-cta{grid-column:1/-1;margin-left:46px}
   .frame-label{font-size:20px}
