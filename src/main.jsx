@@ -228,73 +228,60 @@ function Services() {
 
 /* ------------------------------------------------------------- Results */
 
-const gallery = [
-  [IMG.brow, 'Close-up of a groomed, laminated brow', 'Brow detail'],
-  [IMG.hero, 'Portrait showcasing personalized brow styling', 'Natural definition'],
-  [IMG.lash, 'Profile showcasing lifted lashes and natural brows', 'Lifted + refined'],
-  [IMG.brow, 'Detailed brow artistry result', 'The close-up'],
+const effects = [
+  { src: IMG.brow, alt: 'Close-up of a groomed, laminated brow', label: 'Brow detail', note: 'Lamination + hybrid tint' },
+  { src: IMG.hero, alt: 'Portrait showcasing personalized brow styling', label: 'Natural definition', note: 'Shape mapped to the face' },
+  { src: IMG.lash, alt: 'Profile showcasing lifted lashes and natural brows', label: 'Lifted + refined', note: 'Korean lash lift' },
 ];
 
-/** Desktop: the gallery scrolls sideways while the section is pinned.
- *  Mobile: it falls back to a native swipeable track. */
-function Results() {
-  const section = useRef(null);
-  const track = useRef(null);
-  const [span, setSpan] = useState(0);
-  const spanRef = useRef(0);
-  spanRef.current = span;
-
-  useEffect(() => {
-    const measure = () => {
-      const pinnable = window.matchMedia('(min-width: 901px)').matches && !reduced();
-      if (!track.current || !pinnable) { setSpan(0); return; }
-      const extra = track.current.scrollWidth - window.innerWidth;
-      setSpan(extra > 80 ? Math.round(extra + 80) : 0);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (track.current) ro.observe(track.current);
-    window.addEventListener('resize', measure);
-    return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
-  }, []);
-
-  useScroll(() => {
-    const total = spanRef.current;
-    if (!section.current || !track.current || !total) {
-      if (track.current && !spanRef.current) track.current.style.transform = '';
-      return;
-    }
-    const r = section.current.getBoundingClientRect();
-    const travel = r.height - window.innerHeight;
-    const p = Math.min(1, Math.max(0, -r.top / travel));
-    track.current.style.transform = `translate3d(${(-p * total).toFixed(1)}px, 0, 0)`;
-  });
-
+/** One gallery frame: the image drifts inside a mask that wipes open on entry. */
+function Frame({ item, index, place, strength }) {
+  const img = useParallax(strength, 1.2);
   return (
-    <section
-      className={`results section${span ? ' is-pinned' : ''}`}
-      id="results"
-      ref={section}
-      style={span ? { height: `calc(100vh + ${span}px)` } : undefined}
-    >
-      <div className="results-stage">
-        <div className="shell results-head">
+    <figure className={`frame frame--${place} reveal`} data-cursor="Look">
+      <div className="frame-wrap">
+        <div className="frame-inner" ref={img}>
+          <img src={item.src} alt={item.alt} loading="lazy" />
+        </div>
+        <span className="frame-veil" aria-hidden="true" />
+        <span className="frame-index">0{index + 1}</span>
+      </div>
+      <figcaption>
+        <span className="frame-label">{item.label}</span>
+        <span className="frame-note">{item.note}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function Results() {
+  return (
+    <section className="results section" id="results">
+      <div className="shell">
+        <div className="results-head">
           <p className="kicker reveal">THE CALAS EFFECT</p>
           <SplitText lines={['Results worth a', { t: 'closer look.', em: true }]} />
           <p className="reveal">Real texture. Refined shape. A finish that still feels unmistakably yours.</p>
         </div>
-        <div className="gallery-track" ref={track} aria-label="Beauty results gallery">
-          {gallery.map(([src, alt, label], i) => (
-            <figure className={`gallery-item gallery-item--${i + 1} reveal`} key={i} data-cursor="Look">
-              <div className="image-wrap">
-                <img src={src} alt={alt} loading="lazy" />
-                <span className="image-veil" aria-hidden="true" />
-              </div>
-              <figcaption><span>0{i + 1}</span>{label}</figcaption>
-            </figure>
-          ))}
+
+        <div className="effect-grid">
+          <Frame item={effects[0]} index={0} place="a" strength={0.045} />
+          <Frame item={effects[1]} index={1} place="b" strength={0.075} />
+
+          <div className="effect-note reveal">
+            <p>Every result starts the same way &mdash; a close read of your features, then a shape built to suit them.</p>
+            <a className="text-link" href={BOOKING} target="_blank" rel="noreferrer" data-cursor="Book">
+              Book your look <Arrow diagonal />
+            </a>
+          </div>
+
+          <p className="effect-meta reveal">
+            <span>Demo imagery shown</span>
+            Easily replace with Calas Brows client results.
+          </p>
+
+          <Frame item={effects[2]} index={2} place="c" strength={0.06} />
         </div>
-        <p className="gallery-note shell">Demo imagery shown. Easily replace with Calas Brows client results.</p>
       </div>
     </section>
   );
@@ -498,9 +485,9 @@ function LocationInstagram() {
           <div className="reveal"><Button href={INSTAGRAM} outline cursor="Follow">Follow on Instagram</Button></div>
         </div>
         <div className="insta-strip">
-          {gallery.slice(0, 3).map(([src, alt], i) => (
+          {effects.map((item, i) => (
             <a href={INSTAGRAM} target="_blank" rel="noreferrer" key={i} className="reveal" style={{ '--i': i }} data-cursor="Open">
-              <img src={src} alt={alt} loading="lazy" />
+              <img src={item.src} alt={item.alt} loading="lazy" />
               <span>{'↗'}</span>
             </a>
           ))}
